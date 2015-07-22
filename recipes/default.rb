@@ -23,4 +23,19 @@ jenkins_plugin 'envinject'
 jenkins_plugin 'gitlab-plugin'
 
 # Install Git
-package "git"
+package 'git'
+
+# Install Ruby
+include_recipe 'rvm::system_install'
+rvm_ruby 'ruby-2.1.1'
+rvm_default_ruby 'ruby-2.1.1'
+
+directory '/usr/local/rvm/gems/ruby-2.1.1' do
+  mode '0777'
+  recursive true
+end
+
+package 'libgecode-dev'
+
+# Restart Jenkins
+jenkins_command 'safe-restart'
