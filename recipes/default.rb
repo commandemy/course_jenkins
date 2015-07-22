@@ -5,6 +5,7 @@
 # Copyright (c) 2015 The Authors, All Rights Reserved.
 
 include_recipe 'apt'
+include_recipe 'git::default'
 
 # Install Jenkins and dependencies
 include_recipe 'jenkins::java'
