@@ -14,4 +14,28 @@ describe 'Jenkins' do
     it { should be_listening }
   end
 
+  describe file('/var/lib/jenkins/plugins/rvm.jpi') do
+    it { should be_file }
+  end
+
+  describe file('/var/lib/jenkins/plugins/htmlpublisher.jpi') do
+    it { should be_file }
+  end
+
+  describe file('/var/lib/jenkins/plugins/ws-cleanup.jpi') do
+    it { should be_file }
+  end
+
+  describe file('/var/lib/jenkins/plugins/ruby-runtime.jpi') do
+    it { should be_file }
+  end
+
+  describe file('/var/lib/jenkins/plugins/envinject.jpi') do
+    it { should be_file }
+  end
+
+  describe file('/var/lib/jenkins/plugins/gitlab-plugin.jpi') do
+    it { should be_file }
+  end
+
 end
