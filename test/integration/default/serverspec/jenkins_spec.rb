@@ -38,4 +38,8 @@ describe 'Jenkins' do
     it { should be_file }
   end
 
+  describe package('pssh') do
+    it { should be_installed }
+  end
+
 end

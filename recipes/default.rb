@@ -41,17 +41,28 @@ package 'libgecode-dev'
 ## Create jobs
 xml = File.join(Chef::Config[:file_cache_path], 'job_templates.xml')
 
+## Find all relevant nodes
+app_hosts_string = ""
+
+search(:node, "role:#{node['course_roles']['app_server']}").each do |n|
+  app_hosts_string << " -H #{n['ipaddress']}"
+end
+
 template xml do
   source 'job_templates.xml.erb'
   variables({
     cookbooks: node['jenkins']['cookbooks'],
-    application_git: node['jenkins']['application_git']
+    application_git: node['jenkins']['application_git'],
+    hosts_string: app_hosts_string
   })
 end
 
 jenkins_job 'job_builder' do
   config xml
 end
+
+# Install additional packages
+package 'pssh'
 
 # Restart Jenkins
 jenkins_command 'safe-restart'
