@@ -23,9 +23,6 @@
               scm {
                   git(gitUrl<%= cb[:name] %>)
               }
-              triggers {
-                  githubPush()
-              }
               wrappers {
                   rvm('2.1.1')
               }
