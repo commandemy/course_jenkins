@@ -24,7 +24,14 @@
                   git(gitUrl<%= cb[:name] %>)
               }
               wrappers {
-                  rvm('2.1.1')
+                rvm('2.1.1')
+                environmentVariables{
+                  env('HTTP_PROXY', "http://10.1.204.2:3128")
+                  env('HTTPS_PROXY', "http://10.1.204.2:3128")
+                  env('http_proxy', "http://10.1.204.2:3128")
+                  env('https_proxy', "http://10.1.204.2:3128")
+                  env('no_proxy', "gitlab.course.comlocalhost,127.0.0.1")
+                }
               }
               steps {
                   shell('gem install foodcritic')
@@ -43,6 +50,13 @@
         }
         wrappers {
           rvm('2.1.1')
+          environmentVariables{
+            env('HTTP_PROXY', "http://10.1.204.2:3128")
+            env('HTTPS_PROXY', "http://10.1.204.2:3128")
+            env('http_proxy', "http://10.1.204.2:3128")
+            env('https_proxy', "http://10.1.204.2:3128")
+            env('no_proxy', "gitlab.course.comlocalhost,127.0.0.1")
+          }
         }
         steps {
           shell('gem install bundler')
