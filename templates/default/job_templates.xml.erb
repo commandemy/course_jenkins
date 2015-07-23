@@ -1,0 +1,75 @@
+<project>
+  <actions/>
+  <description/>
+  <keepDependencies>false</keepDependencies>
+  <properties/>
+  <scm class="hudson.scm.NullSCM"/>
+  <canRoam>true</canRoam>
+  <disabled>false</disabled>
+  <blockBuildWhenDownstreamBuilding>false</blockBuildWhenDownstreamBuilding>
+  <blockBuildWhenUpstreamBuilding>false</blockBuildWhenUpstreamBuilding>
+  <triggers/>
+  <concurrentBuild>false</concurrentBuild>
+  <builders>
+    <javaposse.jobdsl.plugin.ExecuteDslScripts plugin="job-dsl@1.21">
+    <scriptText>
+
+      <% @cookbooks.each do |cb| %>
+
+        job {
+              name 'foodcritic-course-<%= cb[:name] %>'
+              scm {
+                  git(gitUrl<%= cb[:name] %>)
+              }
+              triggers {
+                  githubPush()
+              }
+              wrappers {
+                  rvm('2.1.1')
+              }
+              steps {
+                  shell('gem install foodcritic')
+                  shell('foodcritic . -f correctness')
+              }
+        }
+
+      <% end %>
+
+      def blogUrl = '<%= @application_git %>'
+
+      job {
+        name 'blog-app-test'
+        scm {
+          git(blogUrl)
+        }
+        wrappers {
+          rvm('2.1.1')
+        }
+        steps {
+          shell('gem install bundler')
+          shell('bundle install --without production')
+          shell('echo "Preparing test database..."')
+          shell('bundle exec rake db:create RACK_ENV=test')
+          shell('bundle exec rake db:migrate RACK_ENV=test')
+          shell('echo "Running tests..."')
+          shell('rm -rf reports; mkdir reports')
+          shell('bundle exec cucumber --format html --out reports/cucumber.html || true')
+          shell('bundle exec rspec --format h > reports/rspec.html || true')
+        }
+        publishers {
+          publishHtml {
+            report("reports", "Cucumber Report", "cucumber.html")
+            report("reports", "RSpec Report", "rspec.html")
+          }
+        }
+      }
+
+</scriptText>
+<usingScriptText>true</usingScriptText>
+<ignoreExisting>false</ignoreExisting>
+<removedJobAction>DELETE</removedJobAction>
+</javaposse.jobdsl.plugin.ExecuteDslScripts>
+</builders>
+<publishers/>
+<buildWrappers/>
+</project>

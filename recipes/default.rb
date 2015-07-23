@@ -10,6 +10,10 @@ include_recipe 'apt'
 include_recipe 'jenkins::java'
 include_recipe 'jenkins::master'
 
+# Build job creation dependencies
+include_recipe 'chef-sugar::default' # new
+include_recipe 'jenkins-chef-dsl::plugins'  # new
+
 # Install required plugins
 node.set['jenkins']['executor']['timeout'] = 240
 
@@ -22,9 +26,6 @@ end
 jenkins_plugin 'envinject'
 jenkins_plugin 'gitlab-plugin'
 
-# Install Git
-package 'git'
-
 # Install Ruby
 include_recipe 'rvm::system_install'
 rvm_ruby 'ruby-2.1.1'
@@ -36,6 +37,21 @@ directory '/usr/local/rvm/gems/ruby-2.1.1' do
 end
 
 package 'libgecode-dev'
+
+## Create jobs
+xml = File.join(Chef::Config[:file_cache_path], 'job_templates.xml')
+
+template xml do
+  source 'job_templates.xml.erb'
+  variables({
+    cookbooks: node['jenkins']['cookbooks'],
+    application_git: node['jenkins']['application_git']
+  })
+end
+
+jenkins_job 'job_builder' do
+  config xml
+end
 
 # Restart Jenkins
 jenkins_command 'safe-restart'
