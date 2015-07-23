@@ -55,7 +55,7 @@
             env('HTTPS_PROXY', "http://10.1.204.2:3128")
             env('http_proxy', "http://10.1.204.2:3128")
             env('https_proxy', "http://10.1.204.2:3128")
-            env('no_proxy', "gitlab.course.comlocalhost,127.0.0.1")
+            env('no_proxy', "gitlab.course.com,localhost,127.0.0.1")
           }
         }
         steps {
@@ -74,6 +74,33 @@
             report("reports", "Cucumber Report", "cucumber.html")
             report("reports", "RSpec Report", "rspec.html")
           }
+        }
+      }
+
+      job {
+        name 'blog-app-artifact-deploy'
+        scm {
+          git(blogUrl)
+        }
+        wrappers {
+          rvm('2.1.1')
+          sshAgent('<%= @ssh_agent %>')
+          environmentVariables{
+            env('HTTP_PROXY', "http://10.1.204.2:3128")
+            env('HTTPS_PROXY', "http://10.1.204.2:3128")
+            env('http_proxy', "http://10.1.204.2:3128")
+            env('https_proxy', "http://10.1.204.2:3128")
+            env('no_proxy', "gitlab.course.com,localhost,127.0.0.1")
+          }
+        }
+        steps {
+          shell('gem install fpm')
+          shell('fpm -f -x .git -s dir -t tar -n blog *')
+          shell('parallel-ssh -O StrictHostKeyChecking=no -l ubuntu@<%= @hosts_string %> "sudo chef-client"')
+        }
+        publishers {
+          archiveArtifacts '**/*.tar'
+          wsCleanup()
         }
       }
 

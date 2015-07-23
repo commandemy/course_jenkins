@@ -8,3 +8,6 @@ default['jenkins']['cookbooks'] = [
 default['jenkins']['application_git'] = 'http://gitlab.course.com/root/blog.git'
 
 default['course_roles']['app_server'] = 'app_server'
+
+default['jenkins']['credentials']['key_name'] = 'appserver-key'
+default['jenkins']['credentials']['username'] = 'jenkins'

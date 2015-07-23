@@ -42,7 +42,7 @@ package 'libgecode-dev'
 xml = File.join(Chef::Config[:file_cache_path], 'job_templates.xml')
 
 ## Find all relevant nodes
-app_hosts_string = ""
+app_hosts_string = ''
 
 search(:node, "role:#{node['course_roles']['app_server']}").each do |n|
   app_hosts_string << " -H #{n['ipaddress']}"
@@ -53,7 +53,8 @@ template xml do
   variables({
     cookbooks: node['jenkins']['cookbooks'],
     application_git: node['jenkins']['application_git'],
-    hosts_string: app_hosts_string
+    hosts_string: app_hosts_string,
+    ssh_agent: node['jenkins']['credentials']['key_name']
   })
 end
 
@@ -63,6 +64,21 @@ end
 
 # Install additional packages
 package 'pssh'
+
+# Add SSH Credentials
+directory '/var/lib/jenkins/.ssh' do
+  owner 'jenkins'
+  action :create
+end
+
+cookbook_file '/var/lib/jenkins/.ssh/id_rsa' do
+  source 'jenkins.pem'
+end
+
+jenkins_private_key_credentials node['jenkins']['credentials']['username'] do
+  description node['jenkins']['credentials']['key_name']
+  private_key lazy { File.read('/var/lib/jenkins/.ssh/id_rsa') }
+end
 
 # Restart Jenkins
 jenkins_command 'safe-restart'

@@ -23,8 +23,8 @@ describe 'Jobs' do
   end
 
   describe file(jobs_file) do
-    #its(:content) { should match /-H 10.11.12.100/ }
-    #its(:content) { should match /-H 10.11.12.101/ }
+    its(:content) { should match /-H 10.11.12.100/ }
+    its(:content) { should match /-H 10.11.12.101/ }
   end
 
 end
