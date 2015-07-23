@@ -1,4 +1,4 @@
-# course_jenkins_level_1
+# course_jenkins_v3
 
 TODO: Enter the cookbook description here.
 

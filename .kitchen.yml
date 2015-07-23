@@ -11,5 +11,5 @@ platforms:
 suites:
   - name: default
     run_list:
-      - recipe[course_jenkins_level_1::default]
+      - recipe[course_jenkins_v3::default]
     attributes:

@@ -1,4 +1,4 @@
-name             'course_jenkins_level_1'
+name             'course_jenkins_v3'
 maintainer       'The Authors'
 maintainer_email 'you@example.com'
 license          'all_rights'
