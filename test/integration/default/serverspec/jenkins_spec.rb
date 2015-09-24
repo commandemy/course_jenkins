@@ -42,4 +42,8 @@ describe 'Jenkins' do
     its(:stdout) { should match(/\/usr\/bin\/git/) }
   end
 
+  describe file('/etc/hosts') do
+     its(:content) { should match(/gitlab.course.com/) }
+  end
+
 end
