@@ -36,5 +36,11 @@ group 'rvm' do
   notifies :execute, 'jenkins_command[safe-restart]'
 end
 
+# Add GitLab to /etc/hosts
+template '/etc/hosts' do
+  source 'hosts.erb'
+  variables(gitlab_ip: node['course_jenkins']['gitlab_ip'])
+end
+
 # Restart Jenkins
 jenkins_command 'safe-restart'
