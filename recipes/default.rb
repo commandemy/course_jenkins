@@ -31,12 +31,11 @@ include_recipe 'rvm::system_install'
 rvm_ruby 'ruby-2.1.1'
 rvm_default_ruby 'ruby-2.1.1'
 
-directory '/usr/local/rvm/gems/ruby-2.1.1' do
-  mode '0777'
-  recursive true
+group 'rvm' do
+  members 'jenkins'
+  append true
+  notifies :execute, 'jenkins_command[safe-restart]'
 end
-
-package 'libgecode-dev'
 
 ## Create jobs
 xml = File.join(Chef::Config[:file_cache_path], 'job_templates.xml')
