@@ -5,7 +5,7 @@ set :backend, :exec
 
 describe 'Jenkins' do
 
-  describe service('jenkins') do
+  describe service("jenkins") do
     it { should be_enabled }
     it { should be_running }
   end
@@ -36,6 +36,14 @@ describe 'Jenkins' do
 
   describe file('/var/lib/jenkins/plugins/gitlab-plugin.jpi') do
     it { should be_file }
+  end
+
+  describe command('bash -l -c "which git"') do
+    its(:stdout) { should match(/\/usr\/bin\/git/) }
+  end
+
+  describe file('/etc/hosts') do
+     its(:content) { should match(/gitlab.course.com/) }
   end
 
   describe package('pssh') do
