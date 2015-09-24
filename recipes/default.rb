@@ -39,7 +39,10 @@ end
 # Add GitLab to /etc/hosts
 template '/etc/hosts' do
   source 'hosts.erb'
-  variables(gitlab_ip: node['course_jenkins']['gitlab_ip'])
+  variables(
+    gitlab_ip: node['course_jenkins']['gitlab_ip'],
+    chef_server_ip: node['course_jenkins']['chef_server_ip']
+  )
 end
 
 # Restart Jenkins
