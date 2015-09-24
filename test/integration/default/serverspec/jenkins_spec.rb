@@ -38,4 +38,8 @@ describe 'Jenkins' do
     it { should be_file }
   end
 
+  describe command('bash -l -c "which git"') do
+    its(:stdout) { should match(/\/usr\/bin\/git/) }
+  end
+
 end
