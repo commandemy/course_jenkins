@@ -34,7 +34,7 @@ rvm_default_ruby 'ruby-2.1.1'
 group 'rvm' do
   members 'jenkins'
   append true
-  notifies :execute, 'jenkins_command[safe-restart]'
+  notifies :restart, 'service[jenkins]', :immediately
 end
 
 # Add GitLab to /etc/hosts
